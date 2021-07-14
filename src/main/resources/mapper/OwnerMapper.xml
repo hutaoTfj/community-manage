@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ink.hutao.manage.mapper.OwnerMapper">
+    <select id="getOwnerRealInfo" resultType="ink.hutao.manage.entity.vo.GetOwnerRealVo">
+        SELECT
+        owner.nickName AS nickName,
+        owner.imageUrl AS imageUrl,
+        rel.realName,
+        rel.address,
+        rel.phoneNumber
+        FROM
+        sys_owner AS owner
+        LEFT JOIN
+        sys_real AS rel
+        ON owner.id=rel.ownerId
+        WHERE owner.id=#{ownerId};
+    </select>
 
+    <select id="getEmpRole" resultType="string">
+        SELECT role.roleName FROM `sys_role` role
+
+        LEFT JOIN sys_owner owner on owner.id=role.roleId
+
+        WHERE role.roleId=#{id};
+    </select>
 </mapper>

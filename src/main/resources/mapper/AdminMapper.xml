@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ink.hutao.manage.mapper.AdminMapper">
+    <select id="judgeCipher" resultType="string">
+        SELECT
+        cipher.`cipher`
+        FROM
+        sys_admin admin
+        LEFT JOIN
+        sys_cipher cipher
+        on admin.id=cipher.adminId
+        where admin.account=#{account};
+    </select>
+
+    <select id="queryCipher" resultType="string">
+        SELECT
+        cipher.`cipher`
+        FROM
+        sys_admin admin
+        LEFT JOIN
+        sys_cipher cipher
+        on admin.id=cipher.adminId
+        where admin.account=#{account};
+    </select>
+
+    <update id="putAdminCipher">
+        UPDATE
+        sys_admin admin
+        RIGHT JOIN
+        sys_cipher cipher
+        on
+        admin.id=cipher.adminId
+        set cipher=#{newCipher}
+        where admin.account=#{account}
+    </update>
+
+    <select id="getAllOwnerRealInfo" resultType="ink.hutao.manage.entity.vo.GetAllOwnerRealInfoVo">
+        SELECT
+        owner.nickName,
+        owner.imageUrl,
+        owner.createTime,
+        rel.id,
+        rel.address,
+        rel.phoneNumber,
+        rel.realName,
+        community.communityName
+        FROM
+        sys_owner owner
+        LEFT JOIN
+        sys_real rel
+        on rel.ownerId=owner.id
+        LEFT JOIN
+        sys_community community
+        ON owner.communityId=community.id
+    </select>
+</mapper>

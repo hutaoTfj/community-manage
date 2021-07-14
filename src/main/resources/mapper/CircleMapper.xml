@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ink.hutao.manage.mapper.CircleMapper">
+    <select id="showParentCircle" resultType="ink.hutao.manage.entity.vo.GetCircleVo">
+        SELECT
+        circle.id AS id,
+        circle.message AS message,
+        circle.parentId AS parentId,
+        circle.circleImagesUrl AS circleImagesUrl,
+        circle.createTime AS createTime
+        FROM
+        sys_circle AS circle
+        WHERE
+        ( circle.parentId=0 and circle.deleted=0)
+        ORDER BY
+        circle.createTime DESC;
+    </select>
+
+    <select id="getChildUserInfo" resultType="ink.hutao.manage.entity.vo.OwnerInfoVo">
+        SELECT
+        owner.id AS id,
+        owner.nickName AS nickName,
+        owner.imageUrl AS imageUrl
+        FROM sys_circle AS circle
+        LEFT JOIN sys_owner AS owner ON owner.id = circle.ownerId
+        WHERE circle.id = #{id} limit 1;
+    </select>
+
+    <select id="showChildCircle" resultType="ink.hutao.manage.entity.vo.GetCircleVo">
+        SELECT
+        circle.id AS id,
+        circle.message AS message,
+        circle.circleImagesUrl AS circleImagesUrl,
+        circle.parentId AS parentId,
+        circle.createTime AS createTime,
+        owner.openId AS openId,
+        owner.imageUrl AS imageUrl,
+        owner.nickName AS nickName
+        FROM
+        sys_circle AS circle
+        LEFT JOIN sys_owner AS owner ON owner.id = circle.ownerId
+        WHERE
+        circle.parentId = #{parentId} and circle.deleted=0
+        ORDER BY
+        circle.createTime DESC;
+    </select>
+
+    <select id="getParentUserInfo" resultType="ink.hutao.manage.entity.vo.OwnerInfoVo">
+        SELECT
+        owner.id AS id,
+        owner.nickName AS nickName,
+        owner.imageUrl AS imageUrl
+        FROM sys_circle AS circle
+        LEFT JOIN sys_owner AS owner ON owner.id = circle.ownerId
+        WHERE owner.id =(SELECT circle.ownerId FROM sys_circle AS circle WHERE circle.id=#{id}) and parentId=0
+        LIMIT 1;
+    </select>
+
+    <select id="judgeChildCircle" resultType="int">
+        SELECT COUNT(*) FROM sys_circle WHERE parentId=#{id}
+    </select>
+
+    <select id="judgeThirdCircle" resultType="int">
+        SELECT COUNT(*) FROM sys_circle WHERE parentId=#{id}
+    </select>
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ink.hutao.manage.mapper.RepairMapper">
+    <select id="getOwnerRepairInfo" resultType="ink.hutao.manage.entity.vo.GetRepairVo">
+        SELECT
+        repair.id AS id,
+        repair.repairContext AS repairContext,
+        repair.imageUrl AS imageUrl,
+        repair.repairState AS repairState,
+        repair.createTime AS createTime,
+        (SELECT phoneNumber from sys_real  where repair.openId=sys_real.openId) as phoneNumber
+        FROM
+        sys_repair AS repair
+    </select>
+
+    <select id="getOwnerPhoneNumber" resultType="string">
+        SELECT
+        phoneNumber
+        FROM `sys_real`
+        WHERE openId=#{openId}
+    </select>
+</mapper>

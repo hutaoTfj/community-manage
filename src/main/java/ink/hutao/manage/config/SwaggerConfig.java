@@ -7,6 +7,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 /**
@@ -15,11 +16,13 @@ import springfox.documentation.spring.web.plugins.Docket;
  * @since 2021/6/28
  */
 @Configuration
+@EnableSwagger2
 public class SwaggerConfig {
 
     @Bean
     public Docket createRestApi(){
-        return new Docket(DocumentationType.OAS_30).pathMapping("/")
+        return new Docket(DocumentationType.SWAGGER_2).pathMapping("/")
+//                .host("hutao.ink/c/")
                 // 开启个人信息
                 .apiInfo(apiInfo())
                 // 选择哪些接口作为swagger的doc发布
@@ -41,7 +44,7 @@ public class SwaggerConfig {
                         "" ,
                         "489516067@qq.com"))
                 //版本
-                .version("3.0")
+                .version("2.0")
                 //运行
                 .build();
     }

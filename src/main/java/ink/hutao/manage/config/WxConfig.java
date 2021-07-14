@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -45,7 +46,9 @@ public class WxConfig {
         String body = responseEntity.getBody();
         return gson.fromJson(body, CustomUserState.class);
     }
+
     @Bean
+    @Scope("prototype")
     public Long getId(){
         Snowflake snowflakeId = IdUtil.createSnowflakeId(3, 4);
         return snowflakeId.nextId();

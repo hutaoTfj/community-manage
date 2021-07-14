@@ -1,12 +1,15 @@
 package ink.hutao.manage.entity.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,23 +32,16 @@ public class Owner implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @JsonSerialize(using= ToStringSerializer.class)
     private Long id;
 
     @ApiModelProperty(value = "openID")
     @TableField("openId")
     private String openId;
 
-    @ApiModelProperty(value = "真实性名")
-    @TableField("realName")
-    private String realName;
-
-    @ApiModelProperty(example = "用户名")
+    @ApiModelProperty(example = "微信昵称")
     @TableField("nickName")
     private String nickName;
-
-    @ApiModelProperty(example = "电话号码")
-    @TableField("phoneNumber")
-    private String phoneNumber;
 
     @ApiModelProperty(value = "头像地址")
     @TableField("imageUrl")
@@ -66,6 +62,10 @@ public class Owner implements Serializable {
     @ApiModelProperty(value = "国家")
     @TableField("country")
     private String country;
+
+    @TableField("deleted")
+    @TableLogic
+    private int deleted;
 
     @ApiModelProperty(value = "创建时间")
     @TableField("createTime")

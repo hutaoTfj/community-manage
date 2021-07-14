@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ink.hutao.manage.mapper.RoleMapper">
+    <select id="getRole" resultType="string">
+        SELECT
+        role.roleName
+        FROM
+        `sys_role` role
+        LEFT JOIN
+        sys_admin admin
+        ON
+        admin.id=role.roleId
+        where admin.account=#{account};
+    </select>
+
+    <select id="judgeEmployee" resultType="string">
+        SELECT
+        role.roleName
+        from
+        sys_role role
+        LEFT JOIN
+        sys_owner owner
+        on role.roleId=owner.id
+        LEFT JOIN
+        sys_admin admin
+        on role.roleId=admin.id
+        WHERE role.roleId=#{ownerId}
+    </select>
+</mapper>
