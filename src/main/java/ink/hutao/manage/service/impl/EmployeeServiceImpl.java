@@ -44,12 +44,16 @@ public class EmployeeServiceImpl  implements EmployeeService {
      */
     @Override
     public Result resolveRepair(Long repairId,String path) throws ClientException {
+        //获取报修信息
         Repair selectById = repairMapper.selectById(repairId);
+        //获取业主电话号码
         String ownerPhoneNumber = repairMapper.getOwnerPhoneNumber(selectById.getOpenId());
         String model="SMS_218890834";
+        //发送短信
         CommonResponse commonResponse = smsConfig.sendSmsMessage(ownerPhoneNumber,model);
         if (commonResponse!=null){
             Repair repair = repairMapper.selectById(repairId);
+            //更新报修状态为以报修
             repair.setRepairState("已处理");
             repairMapper.updateById(repair);
             return new Result().result200("处理成功",path);

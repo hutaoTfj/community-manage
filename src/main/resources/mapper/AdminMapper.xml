@@ -55,4 +55,22 @@
         sys_community community
         ON owner.communityId=community.id
     </select>
+
+    <select id="getAllOwnerCar" resultType="ink.hutao.manage.entity.vo.GetAllOwnerCarInfoVo">
+        SELECT
+        car.id,
+        car.carInfo,
+        car.carNumber,
+        car.carImageUrl,
+        owner.imageUrl,
+        rel.realName
+        FROM
+        sys_car car
+        LEFT JOIN
+        sys_owner owner
+        ON  owner.id=car.ownerId
+        LEFT JOIN
+        sys_real rel
+        ON car.ownerId=rel.ownerId
+    </select>
 </mapper>

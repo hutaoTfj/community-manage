@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * <p></p>
+ * <p>获取微信用户信息对象</p>
  * @author tfj
  * @since 2021/6/10
  */

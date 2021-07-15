@@ -64,6 +64,7 @@ public class AdminController {
     public Result putAdminCipher(@RequestParam String account,String newCipher,String oldCipher){
         return adminService.putAdminCipher(account,newCipher,oldCipher,"/admin/putAdminCipher");
     }
+
     /**
      * <p>获取所有业主真实信息</p>
      * @author tfj
@@ -75,4 +76,27 @@ public class AdminController {
     public Result getAllOwnerRealInfo(){
         return adminService.getAllOwnerRealInfo("/admin/getAllOwnerRealInfo");
     }
+    /**
+     * <p>获取所有业主姓名和车辆信息</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
+    @ApiOperation(value = "获取所有业主姓名和车辆信息")
+    @SaCheckRole("admin")
+    @GetMapping("/getAllOwnerCar")
+    public Result getAllOwnerCar(){
+        return adminService.getAllOwnerCar("/admin/getAllOwnerCar");
+    }
+    /**
+     * <p>删除用户车辆信息</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
+    @ApiOperation(value = "删除用户车辆信息")
+    @SaCheckRole("admin")
+    @GetMapping("/deleteOwnerCarInfo")
+    public Result deleteOwnerCarInfo(@RequestParam Long carId){
+        return adminService.deleteOwnerCarInfo(carId,"/admin/deleteOwnerCarInfo");
+    }
+
 }

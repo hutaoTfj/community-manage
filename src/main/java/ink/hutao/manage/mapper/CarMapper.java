@@ -2,6 +2,9 @@ package ink.hutao.manage.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import ink.hutao.manage.entity.po.Car;
+import ink.hutao.manage.entity.vo.GetOwnerCarInfoVo;
+
+import java.util.List;
 
 /**
  * <p></p>
@@ -11,5 +14,5 @@ import ink.hutao.manage.entity.po.Car;
 public interface CarMapper extends BaseMapper<Car> {
     int judgeCarNumber(String txt);
 
-    Car getOwnerCarInfo(Long ownerId);
+    List<GetOwnerCarInfoVo> getOwnerCarInfo(Long ownerId);
 }

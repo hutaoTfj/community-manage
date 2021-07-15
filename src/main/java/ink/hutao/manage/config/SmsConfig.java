@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Slf4j
 public class SmsConfig {
+
     @Value("${ali.sms.AccessKeyId}")
     private String accessKeyId;
 
@@ -36,12 +37,20 @@ public class SmsConfig {
 
     public String code ;
 
+    /**
+     * <p>发送随机数验证码</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
     public CommonResponse generateSmsRequest(String phone,String model) throws ClientException {
+        //创建配置文件实例并初始化
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId,accessKeySecret);
+        //创建连接加载配置文件
         IAcsClient client = new DefaultAcsClient(profile);
-
+        //生成随机验证码
         code = RandomUtil.randomNumber(4);
-        CommonRequest request = new CommonRequest();
+        //创建API请求并设置参数
+        CommonRequest request=new CommonRequest();
         request.setSysVersion("2017-05-25");
         request.setSysAction("SendSms");
         request.setSysDomain(domain);
@@ -50,16 +59,21 @@ public class SmsConfig {
         request.putQueryParameter("SignName",signName);
         request.putQueryParameter("TemplateCode", model);
         request.putQueryParameter("TemplateParam", "{\"code\":\""+code+"\"}");
+        //获取返回值
         CommonResponse response = client.getCommonResponse(request);
         log.info(response.getData());
         return response;
     }
-
+    /**
+     * <p>发送短信验证码</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
     public CommonResponse sendSmsMessage(String phone,String model) throws ClientException {
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId,accessKeySecret);
         IAcsClient client = new DefaultAcsClient(profile);
-
-        CommonRequest request = new CommonRequest();
+        //创建API请求并设置参数
+        CommonRequest request=new CommonRequest();
         request.setSysVersion("2017-05-25");
         request.setSysAction("SendSms");
         request.setSysDomain(domain);

@@ -34,6 +34,7 @@ public class CircleServiceImpl extends ServiceImpl<CircleMapper, Circle> impleme
      */
     @Override
     public Result publishedCircle(PostCircleDto postCircleDto, Long ownerId, String path) {
+        //实体类转换
         Circle circle = BeansUtils.beanCopy(postCircleDto, Circle.class);
         circle.setId(wxConfig.getId());
         circle.setOwnerId(ownerId);
@@ -50,10 +51,13 @@ public class CircleServiceImpl extends ServiceImpl<CircleMapper, Circle> impleme
      */
     @Override
     public List<GetCircleVo> showCircles() {
+        //展示楼主圈子
         List<GetCircleVo> parentCircle = circleMapper.showParentCircle();
         for (int i=0;i<parentCircle.size(); i++){
             GetCircleVo getParentCircleVo = parentCircle.get(i);
+            //展示楼主信息
             getParentCircleVo.setOriginalPoster(circleMapper.getParentUserInfo(getParentCircleVo.getId()));
+            //将GetCircleVo集合中的原元素替换成新的
             Collections.replaceAll(parentCircle,parentCircle.get(i),getParentCircleVo);
         }
         return parentCircle;
@@ -65,14 +69,18 @@ public class CircleServiceImpl extends ServiceImpl<CircleMapper, Circle> impleme
      */
     @Override
     public List<GetCircleVo> showChildCircles(Long parentId) {
+        //子圈子展示
         List<GetCircleVo> getChildCircleVo=circleMapper.showChildCircle(parentId);
-
         for (int j=0;j<getChildCircleVo.size();j++){
             GetCircleVo childCircleVo = getChildCircleVo.get(j);
+            //获取发表子圈子用户信息
             childCircleVo.setChildPoster(circleMapper.getChildUserInfo(childCircleVo.getId()));
-            if (this.judgeChildCircle(childCircleVo.getId())){
+            //判断是否存在三级圈子
+            if (this.judgeThirdCircle(childCircleVo.getId())){
+                //获取三级圈子
                 childCircleVo.setChildrenList(this.showThirdCircle(childCircleVo.getId()));
             }
+            //将GetCircleVo集合中的原元素替换成新的
             Collections.replaceAll(getChildCircleVo,getChildCircleVo.get(j),childCircleVo);
         }
         return getChildCircleVo;
@@ -84,6 +92,7 @@ public class CircleServiceImpl extends ServiceImpl<CircleMapper, Circle> impleme
      */
     @Override
     public  List<GetCircleVo> showThirdCircle(Long parentId) {
+        //子圈子展示
         List<GetCircleVo> getChildCircle=circleMapper.showChildCircle(parentId);
         for (int j=0;j<getChildCircle.size();j++){
             GetCircleVo childCircleVo = getChildCircle.get(j);
@@ -124,7 +133,7 @@ public class CircleServiceImpl extends ServiceImpl<CircleMapper, Circle> impleme
         return circleMapper.judgeThirdCircle(id) != 0;
     }
     /**
-     * <p></p>
+     * <p>通过父id查找子圈子</p>
      * @author tfj
      * @since 2021/7/13
      */

@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 
 /**
- * <p></p>
+ * <p>微信原生登录</p>
  * @author tfj
  * @since 2021/6/10
  */
@@ -40,13 +40,26 @@ public class WxConfig {
         return builder.build();
     }
 
+    /**
+     * <p>获取openId</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
     public CustomUserState getResponseEntity(String code) {
+        //设置微信api地址和参数
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + code + "&grant_type=authorization_code";
+        //发送请求，获取返回值
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
+        //使用GSON方法解析json数据
         String body = responseEntity.getBody();
         return gson.fromJson(body, CustomUserState.class);
     }
 
+    /**
+     * <p>雪花id，多例</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
     @Bean
     @Scope("prototype")
     public Long getId(){

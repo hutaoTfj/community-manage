@@ -1,6 +1,5 @@
 package ink.hutao.manage.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -15,7 +14,7 @@ import ink.hutao.manage.entity.po.Owner;
 import ink.hutao.manage.entity.po.Real;
 import ink.hutao.manage.entity.vo.GetCircleVo;
 import ink.hutao.manage.entity.vo.GetOwnerRealVo;
-import ink.hutao.manage.entity.vo.ReplyCircleVo;
+import ink.hutao.manage.entity.vo.CircleVo;
 import ink.hutao.manage.mapper.OwnerMapper;
 import ink.hutao.manage.mapper.RealMapper;
 import ink.hutao.manage.service.CircleService;
@@ -64,6 +63,7 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
     @Override
     public Result getOpenId(String code, String path) {
         Owner owner=new Owner();
+        //向微信api发送请求获取openId
         CustomUserState responseEntity = wxConfig.getResponseEntity(code);
         owner.setId(wxConfig.getId());
         owner.setOpenId(responseEntity.getOpenid());
@@ -88,7 +88,6 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
         owner.setCountry(postUserDto.getCountry());
         owner.setNickName(postUserDto.getNickName());
         owner.setImageUrl(postUserDto.getImageUrl());
-        StpUtil.setLoginId(owner.getId());
         if (ownerMapper.updateById(owner)==1){
             return new Result().result200(owner.getId(),path);
         }
@@ -101,11 +100,13 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
      */
     @Override
     public Result sendSmsCode(String phoneNumber,Long ownerId, String path) throws ClientException {
+        //用户首次绑定信息发送验证码
         Real real = realMapper.selectOne(new QueryWrapper<Real>().eq("ownerId",ownerId));
         if (real!=null){
             return new Result().result200("已经绑定过信息",path);
         }
         String model="SMS_218034906";
+        //发送验证码
         CommonResponse commonResponse = smsConfig.generateSmsRequest(phoneNumber,model);
         Real addReal=new Real();
         addReal.setId(wxConfig.getId());
@@ -114,6 +115,7 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
         addReal.setCreateTime(new Date());
         realMapper.insert(addReal);
         if (commonResponse!=null){
+            //存入redis，设置有效期
             redisTemplate.opsForValue().set(ownerId,smsConfig.getCode(),5, TimeUnit.MINUTES);
             return new Result().result200("获取手机验证码成功,五分钟内有效",path);
         }
@@ -126,6 +128,7 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
      */
     @Override
     public Result judgeCode(String code,Long ownerId, String path) {
+        //判断验证码
         String a =(String) redisTemplate. opsForValue().get(ownerId);
         assert a != null;
         if (a.equals(code)){
@@ -176,6 +179,7 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
     @Override
     public Result updateBindInfo(Long ownerId, String phoneNumber, String path) throws ClientException {
         String model="SMS_218034906";
+        //发送验证码
         CommonResponse commonResponse = smsConfig.generateSmsRequest(phoneNumber,model);
         if (commonResponse!=null){
             redisTemplate.opsForValue().set(ownerId,smsConfig.getCode(),5, TimeUnit.MINUTES);
@@ -191,6 +195,7 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
      */
     @Override
     public Result judgeCodeUpdate(String code,Long ownerId,PostReal postReal, String path) {
+        //判断验证码
         String a = (String) redisTemplate.opsForValue().get(ownerId);
         assert a != null;
         if (a.equals(code)){
@@ -211,24 +216,31 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
      */
     @Override
     public Result getOwnerCircle(String path) {
+        //一级圈子展示
         List<GetCircleVo> getCircleVos = circleService.showCircles();
+        //循环遍历输出二级圈子
         for (int i = 0; i < getCircleVos.size(); i++) {
             GetCircleVo getCircleVo = getCircleVos.get(i);
+            //判断是否存在二级圈子
             if (circleService.judgeChildCircle(getCircleVo.getId())){
+                //通过父id查询子圈子
                 getCircleVo.setChildrenList(circleService.showChildCircles(getCircleVo.getId()));
                 List<GetCircleVo> childrenList = getCircleVo.getChildrenList();
+                //循环遍历三级圈子
                 for (GetCircleVo getChildCircleVo : childrenList) {
+                    //判断是否存在三级圈子
                     if (circleService.judgeThirdCircle(getChildCircleVo.getId())) {
+                        //通过父id查询子圈子
                         getChildCircleVo.setThirdList(circleService.showThirdCircle(getChildCircleVo.getId()));
                     }
                 }
             }
+            //将GetCircleVo集合中的原元素替换成新的
             Collections.replaceAll(getCircleVos,getCircleVos.get(i),getCircleVo);
         }
-
-        ReplyCircleVo replyCircleVo=new ReplyCircleVo();
-        replyCircleVo.setGetCircleVoList(getCircleVos);
-        return new Result().result200(replyCircleVo,path);
+        CircleVo circleVo =new CircleVo();
+        circleVo.setGetCircleListVo(getCircleVos);
+        return new Result().result200(circleVo,path);
     }
     /**
      * <p>判断用户绑定状态</p>

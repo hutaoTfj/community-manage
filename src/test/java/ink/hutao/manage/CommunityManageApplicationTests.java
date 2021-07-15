@@ -46,7 +46,7 @@ class CommunityManageApplicationTests {
 
     @Test
     public void getSmsCode() throws ClientException {
-        String model="SMS_218034906";
+        String model="SMS_218890834";
         CommonResponse commonRequest = smsConfig.generateSmsRequest("19941395047",model);
         System.out.println(commonRequest.getData());
         System.out.println(commonRequest.getHttpStatus());
@@ -57,7 +57,7 @@ class CommunityManageApplicationTests {
     public void testRedis(){
 //        try {
 //        //连接本地Redis服务
-//        Jedis jedis = new Jedis("47.118.66.86", 6379);
+//        RedisProperties.Jedis jedis = new RedisProperties.Jedis("47.118.66.86", 6379);
 //        jedis.auth("27599");
 //            String ping = jedis.ping();
 //            if (ping.equalsIgnoreCase("PONG")) {

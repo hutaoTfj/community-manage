@@ -36,12 +36,12 @@ public class SwaggerConfig {
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //api文本
-                .title("HuTao api")
+                .title("智慧社区API")
                 //说明
-                .description("")
+                .description("hutao api")
                 //用户名 + 网址 + 邮箱
-                .contact(new Contact("hutao" ,
-                        "" ,
+                .contact(new Contact("" ,
+                        "hutao.ink" ,
                         "489516067@qq.com"))
                 //版本
                 .version("2.0")

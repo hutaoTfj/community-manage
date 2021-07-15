@@ -41,4 +41,16 @@ public interface AdminService extends IService<Admin> {
      * @since 2021/7/14
      */
     Result getAllOwnerRealInfo(String path);
+    /**
+     * <p>获取所有业主姓名和车辆信息</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
+    Result getAllOwnerCar(String path);
+    /**
+     * <p>删除用户车辆信息</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
+    Result deleteOwnerCarInfo(Long carId, String path);
 }

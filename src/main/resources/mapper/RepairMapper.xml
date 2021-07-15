@@ -10,9 +10,13 @@
         repair.imageUrl AS imageUrl,
         repair.repairState AS repairState,
         repair.createTime AS createTime,
-        (SELECT phoneNumber from sys_real  where repair.openId=sys_real.openId) as phoneNumber
+        rel.phoneNumber
         FROM
         sys_repair AS repair
+        LEFT JOIN
+        sys_real rel
+        ON
+        rel.ownerId=repair.openId
     </select>
 
     <select id="getOwnerPhoneNumber" resultType="string">

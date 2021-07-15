@@ -28,9 +28,12 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
     private BannerMapper bannerMapper;
     @Resource
     private WxConfig wxConfig;
-    @Resource
-    private OssConfig ossConfig;
 
+    /**
+     * <p>获取所有轮播图</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
     @Override
     public Result getAllBanner(String path) {
         List<Banner> banners = bannerMapper.selectList(new QueryWrapper<>());
@@ -39,7 +42,6 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
 
     /**
      * <p>添加轮播图</p>
-     *
      * @author tfj
      * @since 2021/6/29
      */

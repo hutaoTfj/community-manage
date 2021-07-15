@@ -3,7 +3,11 @@ package ink.hutao.manage.entity.vo;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
+/**
+ * <p>获取用户真实信息对象</p>
+ * @author tfj
+ * @since 2021/6/30
+ */
 @Data
 public class GetOwnerRealVo {
 

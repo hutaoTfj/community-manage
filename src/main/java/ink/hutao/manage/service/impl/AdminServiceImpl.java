@@ -9,8 +9,10 @@ import com.xiaoTools.core.regular.validation.Validation;
 import com.xiaoTools.core.result.Result;
 import ink.hutao.manage.config.SmsConfig;
 import ink.hutao.manage.entity.po.Admin;
+import ink.hutao.manage.entity.vo.GetAllOwnerCarInfoVo;
 import ink.hutao.manage.entity.vo.GetAllOwnerRealInfoVo;
 import ink.hutao.manage.mapper.AdminMapper;
+import ink.hutao.manage.mapper.CarMapper;
 import ink.hutao.manage.service.AdminService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -41,12 +43,16 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private SimpleMailMessage simpleMailMessage;
     @Resource
     private JavaMailSender javaMailSender;
+    @Resource
+    private CarMapper carMapper;
     @Override
     public Result adminLogin(String account, String cipher, String path) throws ClientException {
+        //判断管理员登录账号是否存在
         Admin admin = adminMapper.selectOne(new QueryWrapper<Admin>().eq("account", account));
         if (admin==null){
             return new Result().result500("账号不存在",path);
         }
+        //发送邮箱验证码
         if (Validation.isEmail(account)){
             String code = RandomUtil.randomNumber(4);
             simpleMailMessage.setTo(account);
@@ -54,15 +60,18 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             redisTemplate.opsForValue().set(account,code,5,TimeUnit.MINUTES);
             javaMailSender.send(simpleMailMessage);
         }
+        //发送手机验证码
         if (Validation.isMobile(account)){
             String model="SMS_218034906";
             smsConfig.generateSmsRequest(account, model);
             redisTemplate.opsForValue().set(account,smsConfig.getCode(),5, TimeUnit.MINUTES);
         }
+        //登录密码加密
         String md5Cipher = DigestUtils.md5DigestAsHex(cipher.getBytes());
         if (!md5Cipher.equals(adminMapper.judgeCipher(account))){
             return new Result().result500("密码错误",path);
         }
+        //加载account到saToken框架
         StpUtil.setLoginId(account);
         Map<String, Object> objectMap=new HashMap<>(2);
         objectMap.put("info","账号密码正确");
@@ -76,6 +85,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
      */
     @Override
     public Result judgeAdminLogin(String account,String code, String path) {
+        //获取redis中的code比对
         String a =(String)redisTemplate.opsForValue().get(account);
         assert a != null;
         if (a.equals(code)){
@@ -121,5 +131,27 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     public Result getAllOwnerRealInfo(String path) {
         List<GetAllOwnerRealInfoVo> ownerRealInfoVos= adminMapper.getAllOwnerRealInfo();
         return new Result().result200(ownerRealInfoVos,path);
+    }
+    /**
+     * <p>获取所有业主姓名和车辆信息</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
+    @Override
+    public Result getAllOwnerCar(String path) {
+        List<GetAllOwnerCarInfoVo> allOwnerCarInfoVos=adminMapper.getAllOwnerCar();
+        return new Result().result200(allOwnerCarInfoVos,path);
+    }
+    /**
+     * <p>删除用户车辆信息</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
+    @Override
+    public Result deleteOwnerCarInfo(Long carId, String path) {
+        if (carMapper.deleteById(carId)==1){
+            return new Result().result200(true,path);
+        }
+        return new Result().result500(false,path);
     }
 }

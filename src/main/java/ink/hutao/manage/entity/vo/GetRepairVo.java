@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * <p></p>
+ * <p>获取报修对象</p>
  * @author tfj
  * @since 2021/7/2
  */

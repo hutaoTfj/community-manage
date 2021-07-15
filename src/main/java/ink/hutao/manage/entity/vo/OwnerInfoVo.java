@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * <p></p>
+ * <p>用户信息对象</p>
  * @author tfj
  * @since 2021/7/4
  */

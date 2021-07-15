@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>车牌号识别</p>
+ * <p>osr-文字识别系统-车牌号识别</p>
  * @author tfj
  * @since 2021/7/14
  */
@@ -42,19 +42,22 @@ public class OsrConfig {
         String config = configObj.toString();
 
         Map<String, String> headers = new HashMap<>(1);
+        //appcode个人身份标识
         headers.put("Authorization", "APPCODE " + appcode);
         Map<String, String> query = new HashMap<>(0);
+        //requestBody
         JSONObject requestObj = new JSONObject();
         requestObj.put("image", imagesUrl);
         if(config.length() > 0) {
             requestObj.put("configure", config);
         }
         String body = requestObj.toString();
-
+        //向host接口地址发送POST请求
         HttpResponse response= HttpUtils.doPost(host,path,method,headers,query,body);
+        //获取返回值解析
         String res= EntityUtils.toString(response.getEntity());
         com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(res);
-        System.out.println(jsonObject.toJSONString());
+        //使用for循环获取json对象中的数组数据
         JSONArray plates = jsonObject.getJSONArray("plates");
         for (int i = 0; i < plates.size();) {
             JSONObject jsonObject1 = plates.getJSONObject(i);

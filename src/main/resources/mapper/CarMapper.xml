@@ -10,10 +10,12 @@
         car.carNumber=#{txt}
     </select>
 
-    <select id="getOwnerCarInfo" resultType="ink.hutao.manage.entity.po.Car">
+    <select id="getOwnerCarInfo" resultType="ink.hutao.manage.entity.vo.GetOwnerCarInfoVo">
         SELECT
         car.carInfo,
-        car.carNumber
+        car.carImageUrl,
+        car.carNumber,
+        car.createTime
         FROM
         sys_car car
         LEFT JOIN

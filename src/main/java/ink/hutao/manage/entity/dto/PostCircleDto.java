@@ -3,7 +3,7 @@ package ink.hutao.manage.entity.dto;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 /**
- * <p></p>
+ * <p>发表圈子对象</p>
  * @author tfj
  * @since 2021/7/13
  */

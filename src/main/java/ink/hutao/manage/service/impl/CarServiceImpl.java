@@ -1,5 +1,6 @@
 package ink.hutao.manage.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaoTools.core.result.Result;
 import ink.hutao.manage.config.OsrConfig;
@@ -7,6 +8,7 @@ import ink.hutao.manage.config.OssConfig;
 import ink.hutao.manage.config.WxConfig;
 import ink.hutao.manage.entity.po.Car;
 import ink.hutao.manage.entity.po.Plates;
+import ink.hutao.manage.entity.vo.GetOwnerCarInfoVo;
 import ink.hutao.manage.mapper.CarMapper;
 import ink.hutao.manage.service.CarService;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p></p>
@@ -37,7 +40,9 @@ public class CarServiceImpl extends ServiceImpl<CarMapper, Car> implements CarSe
      */
     @Override
     public Result licensePlateIdentification(MultipartFile file, String path) throws Exception {
+        //上传车辆图片返回图片地址
         String uploadImage = ossConfig.uploadImage(file);
+        //发送图片地址获取车牌信息
         Plates plantInfo = osrConfig.getPlants(uploadImage);
         if (plantInfo.getTxt()!=null){
             return new Result().result200(plantInfo,path);
@@ -54,11 +59,17 @@ public class CarServiceImpl extends ServiceImpl<CarMapper, Car> implements CarSe
     public Result addOwnerCar(MultipartFile file, Long ownerId, String path) throws Exception {
         String uploadImage = ossConfig.uploadImage(file);
         Plates plants = osrConfig.getPlants(uploadImage);
+        //查询是否是相同车牌
+        Car selectOne = carMapper.selectOne(new QueryWrapper<Car>().eq("carNumber", plants.getTxt()));
+        if (selectOne!=null){
+            return new Result().result500("已有车辆，无法添加",path);
+        }
         Car car=new Car();
         car.setId(wxConfig.getId());
         car.setOwnerId(ownerId);
         car.setCarNumber(plants.getTxt());
         car.setCarInfo(plants.getClsName());
+        car.setCarImageUrl(uploadImage);
         car.setCreateTime(new Date());
         if (carMapper.insert(car)==1){
             return new Result().result200("业主添加所属车辆成功",path);
@@ -86,7 +97,7 @@ public class CarServiceImpl extends ServiceImpl<CarMapper, Car> implements CarSe
      */
     @Override
     public Result getOwnerCarInfo(Long ownerId, String path) {
-        Car ownerCarInfo = carMapper.getOwnerCarInfo(ownerId);
+        List<GetOwnerCarInfoVo> ownerCarInfo = carMapper.getOwnerCarInfo(ownerId);
         if (ownerCarInfo!=null){
             return new Result().result200(ownerCarInfo,path);
         }

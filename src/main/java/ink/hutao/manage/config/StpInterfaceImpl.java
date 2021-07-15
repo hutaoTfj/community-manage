@@ -5,7 +5,6 @@ import cn.dev33.satoken.stp.StpInterface;
 import ink.hutao.manage.mapper.OwnerMapper;
 import ink.hutao.manage.mapper.RoleMapper;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -24,6 +23,12 @@ public class StpInterfaceImpl implements StpInterface {
     private RoleMapper roleMapper;
     @Resource
     private OwnerMapper ownerMapper;
+
+    /**
+     * <p>判断用户身份加载到saToken</p>
+     * @author tfj
+     * @since 2021/7/15
+     */
     @Override
     public List<String> getPermissionList(Object id, String s) {
         String empRole = ownerMapper.getEmpRole((Long) id);

@@ -29,7 +29,6 @@ public class EmployeeController {
     @ApiOperation(value = "修理员查看业主报修信息")
     @GetMapping("/getOwnerRepairInfo")
     public Result getOwnerRepairInfo(){
-
         return employeeService.getOwnerRepairInfo("/employee/getOwnerRepairInfo");
     }
     /**

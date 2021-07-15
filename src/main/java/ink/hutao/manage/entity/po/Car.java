@@ -36,6 +36,9 @@ public class Car implements Serializable   {
     @TableLogic
     private int deleted;
 
+    @TableField("carImageUrl")
+    private String carImageUrl;
+
     @TableField("createTime")
     private Date createTime;
 
