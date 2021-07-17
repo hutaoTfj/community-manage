@@ -28,8 +28,6 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     private NoticeMapper noticeMapper;
     @Resource
     private WxConfig wxConfig;
-    @Resource
-    private OssConfig ossConfig;
     /**
      * <p>获取所有公告信息</p>
      * @author tfj

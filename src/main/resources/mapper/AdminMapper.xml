@@ -72,5 +72,6 @@
         LEFT JOIN
         sys_real rel
         ON car.ownerId=rel.ownerId
+        where car.deleted=0
     </select>
 </mapper>

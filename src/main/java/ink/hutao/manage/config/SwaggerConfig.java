@@ -22,7 +22,7 @@ public class SwaggerConfig {
     @Bean
     public Docket createRestApi(){
         return new Docket(DocumentationType.SWAGGER_2).pathMapping("/")
-//                .host("hutao.ink/c/")
+                .host("hutao.ink/c/")
                 // 开启个人信息
                 .apiInfo(apiInfo())
                 // 选择哪些接口作为swagger的doc发布

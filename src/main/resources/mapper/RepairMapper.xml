@@ -16,13 +16,24 @@
         LEFT JOIN
         sys_real rel
         ON
-        rel.ownerId=repair.openId
+        rel.ownerId=repair.ownerId
+        where repair.deleted=0
     </select>
 
     <select id="getOwnerPhoneNumber" resultType="string">
         SELECT
         phoneNumber
         FROM `sys_real`
-        WHERE openId=#{openId}
+        WHERE ownerId=#{ownerId}
+    </select>
+
+    <select id="getHistoryRepair" resultType="ink.hutao.manage.entity.vo.GetOwnerRepairVo">
+        SELECT
+        rep.repairContext,
+        rep.imageUrl,
+        rep.repairState,
+        rep.modifyTime
+        FROM `sys_repair` rep
+        WHERE ownerId=#{ownerId}
     </select>
 </mapper>

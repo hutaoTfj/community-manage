@@ -94,7 +94,7 @@ public class AdminController {
      */
     @ApiOperation(value = "删除用户车辆信息")
     @SaCheckRole("admin")
-    @GetMapping("/deleteOwnerCarInfo")
+    @DeleteMapping("/deleteOwnerCarInfo")
     public Result deleteOwnerCarInfo(@RequestParam Long carId){
         return adminService.deleteOwnerCarInfo(carId,"/admin/deleteOwnerCarInfo");
     }

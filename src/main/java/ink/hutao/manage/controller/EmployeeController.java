@@ -38,8 +38,8 @@ public class EmployeeController {
      */
     @ApiOperation(value = "修理员处理报修信息")
     @PostMapping("/resolveRepair")
-    public Result resolveRepair(@RequestParam Long repairId) throws ClientException {
-        return employeeService.resolveRepair(repairId,"/employee/resolveRepair");
+    public Result resolveRepair(@RequestParam Long repairId,Long employeeId) throws ClientException {
+        return employeeService.resolveRepair(repairId,employeeId,"/employee/resolveRepair");
     }
     /**
      * <p>判断是否为员工</p>

@@ -137,7 +137,7 @@
             <artifactId>xiaoTools</artifactId>
             <version>0.1.0-releases</version>
         </dependency>
-        <!--邮箱依赖-->
+        <!--java邮箱依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>

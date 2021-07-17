@@ -12,6 +12,7 @@ import ink.hutao.manage.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,11 +44,11 @@ public class EmployeeServiceImpl  implements EmployeeService {
      * @since 2021/7/4
      */
     @Override
-    public Result resolveRepair(Long repairId,String path) throws ClientException {
+    public Result resolveRepair(Long repairId,Long employeeId,String path) throws ClientException {
         //获取报修信息
         Repair selectById = repairMapper.selectById(repairId);
         //获取业主电话号码
-        String ownerPhoneNumber = repairMapper.getOwnerPhoneNumber(selectById.getOpenId());
+        String ownerPhoneNumber = repairMapper.getOwnerPhoneNumber(selectById.getOwnerId());
         String model="SMS_218890834";
         //发送短信
         CommonResponse commonResponse = smsConfig.sendSmsMessage(ownerPhoneNumber,model);
@@ -55,6 +56,8 @@ public class EmployeeServiceImpl  implements EmployeeService {
             Repair repair = repairMapper.selectById(repairId);
             //更新报修状态为以报修
             repair.setRepairState("已处理");
+            repair.setEmployeeId(employeeId);
+            repair.setModifyTime(new Date());
             repairMapper.updateById(repair);
             return new Result().result200("处理成功",path);
         }

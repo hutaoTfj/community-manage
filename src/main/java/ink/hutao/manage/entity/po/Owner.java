@@ -32,7 +32,6 @@ public class Owner implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @JsonSerialize(using= ToStringSerializer.class)
     private Long id;
 
     @ApiModelProperty(value = "openID")
@@ -62,6 +61,14 @@ public class Owner implements Serializable {
     @ApiModelProperty(value = "国家")
     @TableField("country")
     private String country;
+
+    @ApiModelProperty("小区id")
+    @TableField("communityId")
+    private Long communityId;
+
+    @ApiModelProperty("角色id")
+    @TableField("roleId")
+    private Long roleId;
 
     @TableField("deleted")
     @TableLogic

@@ -106,17 +106,17 @@ public class OwnerController {
      * @author tfj
      * @since 2021/7/4
      */
-    @ApiOperation(value = "业主修改绑定信息发送验证码")
+    @ApiOperation(value = "验证绑定验证码修改绑定信息")
     @GetMapping("/updateBindInfo")
     public Result updateBindInfo(@RequestParam Long ownerId,String phoneNumber) throws ClientException {
         return ownerService.updateBindInfo(ownerId,phoneNumber,"/owner/updateBindInfo");
     }
     /**
-     * <p>验证绑定验证码</p>
+     * <p>业主修改绑定信息发送验证码</p>
      * @author tfj
      * @since 2021/7/11
      */
-    @ApiOperation(value = "验证绑定验证码修改绑定信息")
+    @ApiOperation(value = "业主修改绑定信息发送验证码")
     @PutMapping("/judgeCodeUpdate")
     public Result judgeCodeUpdate(@RequestParam String code,Long ownerId, @RequestBody PostReal postReal){
         return ownerService.judgeCodeUpdate(code,ownerId,postReal,"/owner/judgeCodeUpdate");

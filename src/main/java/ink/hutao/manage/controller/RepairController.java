@@ -27,8 +27,8 @@ public class RepairController {
      */
     @ApiOperation(value = "业主提交报修信息")
     @PostMapping("/postRepairInfo")
-    public Result postRepairInfo(@RequestBody PostRepairDto postRepairDto,@RequestParam String openId){
-        return repairService.postRepairInfo(postRepairDto,openId,"/repair/postRepairInfo");
+    public Result postRepairInfo(@RequestBody PostRepairDto postRepairDto,@RequestParam Long ownerId){
+        return repairService.postRepairInfo(postRepairDto,ownerId,"/repair/postRepairInfo");
     }
     /**
      * <p>业主撤回报修</p>
@@ -47,9 +47,7 @@ public class RepairController {
      */
     @ApiOperation(value = "业主查看报修历史")
     @GetMapping("getHistoryRepair")
-    public Result getHistoryRepair(@RequestParam String openId){
-        return repairService.getHistoryRepair(openId,"/repair/getHistoryRepair");
+    public Result getHistoryRepair(@RequestParam Long ownerId){
+        return repairService.getHistoryRepair(ownerId,"/repair/getHistoryRepair");
     }
-
-
 }

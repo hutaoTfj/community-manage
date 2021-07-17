@@ -11,7 +11,7 @@
         LEFT JOIN
         sys_admin admin
         ON
-        admin.id=role.roleId
+        admin.roleId=role.id
         where admin.account=#{account};
     </select>
 
@@ -21,11 +21,8 @@
         from
         sys_role role
         LEFT JOIN
-        sys_owner owner
-        on role.roleId=owner.id
-        LEFT JOIN
-        sys_admin admin
-        on role.roleId=admin.id
-        WHERE role.roleId=#{ownerId}
+        sys_owner oer
+        on role.id=oer.roleId
+        WHERE oer.id=#{ownerId}
     </select>
 </mapper>

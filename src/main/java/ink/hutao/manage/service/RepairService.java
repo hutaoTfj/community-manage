@@ -15,7 +15,7 @@ public interface RepairService extends IService<Repair> {
      * @author tfj
      * @since 2021/6/30
      */
-    Result postRepairInfo(PostRepairDto postRepairDto, String openId, String path);
+    Result postRepairInfo(PostRepairDto postRepairDto, Long ownerId, String path);
     /**
      * <p>业主撤回报修</p>
      * @author tfj
@@ -27,5 +27,5 @@ public interface RepairService extends IService<Repair> {
      * @author tfj
      * @since 2021/7/2
      */
-    Result getHistoryRepair(String openId, String path);
+    Result getHistoryRepair(Long ownerId, String path);
 }

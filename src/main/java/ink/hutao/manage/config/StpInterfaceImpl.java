@@ -31,12 +31,7 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object id, String s) {
-        String empRole = ownerMapper.getEmpRole((Long) id);
-        List<String> list=new ArrayList<>();
-        if ("RepairMan".equals(empRole)){
-            list.add("emp_repair");
-        }
-        return list;
+        return null;
     }
 
     @Override

@@ -20,7 +20,7 @@ public interface EmployeeService {
      * @author tfj
      * @since 2021/7/4
      */
-    Result resolveRepair(Long repairId,String path) throws ClientException;
+    Result resolveRepair(Long repairId,Long employeeId,String path) throws ClientException;
     /**
      * <p>判断是否为员工</p>
      * @author tfj

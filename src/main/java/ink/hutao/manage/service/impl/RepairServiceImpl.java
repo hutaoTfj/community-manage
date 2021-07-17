@@ -6,6 +6,7 @@ import com.xiaoTools.core.result.Result;
 import ink.hutao.manage.config.WxConfig;
 import ink.hutao.manage.entity.dto.PostRepairDto;
 import ink.hutao.manage.entity.po.Repair;
+import ink.hutao.manage.entity.vo.GetOwnerRepairVo;
 import ink.hutao.manage.entity.vo.GetRepairVo;
 import ink.hutao.manage.mapper.RepairMapper;
 import ink.hutao.manage.service.RepairService;
@@ -32,12 +33,12 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
      * @since 2021/6/30
      */
     @Override
-    public Result postRepairInfo(PostRepairDto postRepairDto, String openId, String path) {
+    public Result postRepairInfo(PostRepairDto postRepairDto, Long ownerId, String path) {
         Repair newRepair=new Repair();
         newRepair.setId(wxConfig.getId());
         newRepair.setRepairContext(postRepairDto.getRepairContext());
         newRepair.setImageUrl(postRepairDto.getImageUrl());
-        newRepair.setOpenId(openId);
+        newRepair.setOwnerId(ownerId);
         newRepair.setRepairState("待处理");
         newRepair.setCreateTime(new Date());
         if (repairMapper.insert(newRepair)==1){
@@ -63,13 +64,12 @@ public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> impleme
      * @since 2021/7/2
      */
     @Override
-    public Result getHistoryRepair(String openId, String path) {
-        List<Repair> repairList = repairMapper.selectList(new QueryWrapper<Repair>().eq("openId", openId));
-        List<GetRepairVo> getRepairVos = BeansUtils.listCopy(repairList, GetRepairVo.class);
-        if (getRepairVos!=null){
-            return new Result().result200(getRepairVos,path);
+    public Result getHistoryRepair(Long ownerId, String path) {
+        List<GetOwnerRepairVo> repairList = repairMapper.getHistoryRepair(ownerId);
+        if (repairMapper!=null){
+            return new Result().result200(repairList,path);
         }
-        return new Result().result500("请求出错",path);
+        return new Result().result200(null,path);
     }
 
 }

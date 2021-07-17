@@ -24,8 +24,8 @@ public class Repair {
     @JsonSerialize(using= ToStringSerializer.class)
     private Long id;
 
-    @TableField("openId")
-    private String openId;
+    @TableField("ownerId")
+    private Long ownerId;
 
     @TableField("imageUrl")
     private String imageUrl;
