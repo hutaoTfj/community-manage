@@ -21,6 +21,7 @@ import java.util.Date;
 @Data
 public class Admin implements Serializable {
 
+
     private Long id;
 
     @TableField("nickName")
